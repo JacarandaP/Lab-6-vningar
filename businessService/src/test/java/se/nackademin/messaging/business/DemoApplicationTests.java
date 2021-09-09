@@ -60,6 +60,11 @@ class DemoApplicationTests {
         // Skapa en queue och en binding till den exchange vi skapade uppgift 1
         // Rabbit har ett verktyg som heter RabbitAdmin med bra hjälpmetoder
         // Tex. rabbitAdmin.declareQueue och rabbitAdmin.declareBinding
+        //rabbitAdmin.declareExchange(new FanoutExchange("business"));;
+        // Skapa en Queue
+        rabbitAdmin.declareQueue(new Queue("queue"));
+        // Skapa en binding för queue till vardera exchange
+        rabbitAdmin.declareBinding(new Binding("queue", Binding.DestinationType.QUEUE, "business", "just to fill the hole", Map.of()));
 
     }
 
@@ -75,10 +80,11 @@ class DemoApplicationTests {
             testa att använda rabbitTemplate.receive(queue-name, 4000);
             därefter kan du titta på meddelandet genom att köra message.getBody()
             Avsluta testet med att asserta att body innehåller "OPEN_ACCOUNT"
-
+            */
+        Message message = rabbitTemplate.receive("queue", 4000);
             assertNotNull(message);
             assertTrue(new String(message.getBody()).contains("OPEN_ACCOUNT"));
-
+/*
             förhoppningsivs failar testet på att message är null.
 
             Leta efter uppgift 3.

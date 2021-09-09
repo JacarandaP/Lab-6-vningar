@@ -45,12 +45,14 @@ public class ApplicationConfiguration {
 
     @Bean
     FanoutExchange exchange() {
-        return null;
+        return new FanoutExchange("business");
     }
 
     @Bean
     public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory, final Jackson2JsonMessageConverter converter) {
-       return null;
+       RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+       rabbitTemplate.setMessageConverter(converter); //for att serialisera objektet
+        return rabbitTemplate;
     }
 
     @Bean

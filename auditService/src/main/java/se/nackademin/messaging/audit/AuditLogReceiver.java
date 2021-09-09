@@ -3,16 +3,21 @@ package se.nackademin.messaging.audit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class AuditLogReceiver {
     private static final Logger LOG = LoggerFactory.getLogger(AuditLogReceiver.class);
 
+
     @Autowired
     AuditLogRepository auditLogRepository;
 
+    @RabbitListener(queues = "audit-log")
     public void receiveMessage(AuditEvent event) {
         LOG.info("Received message! {}", event);
         /* TODO: Uppgift 2: Spara eventet!
@@ -29,5 +34,8 @@ public class AuditLogReceiver {
 
             För att se att allt fungerar kör testet AuditApplicationTest
          */
+        auditLogRepository.add(event.toDomainObject());
+
+
     }
 }

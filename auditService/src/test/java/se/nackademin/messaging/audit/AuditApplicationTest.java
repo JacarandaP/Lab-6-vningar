@@ -52,7 +52,7 @@ class AuditApplicationTest {
     @BeforeEach
     void setUp() {
         rabbitAdmin = new RabbitAdmin(connectionFactory);
-        rabbitAdmin.declareExchange(new FanoutExchange("business-events"));
+        rabbitAdmin.declareExchange(new FanoutExchange("business"));
     }
 
     @Test
@@ -66,7 +66,7 @@ class AuditApplicationTest {
         final String data = "dsa";
 
 
-        rabbitTemplate.convertAndSend("business-events", "" + accountId, new AuditEvent(accountId, data, "OPEN_ACCOUNT", Instant.now().toString()));
+        rabbitTemplate.convertAndSend("business", "" + accountId, new AuditEvent(accountId, data, "OPEN_ACCOUNT", Instant.now().toString()));
 
         Awaitility.await().atMost(Duration.FIVE_SECONDS).untilAsserted(() -> {
             final MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/audit"))
